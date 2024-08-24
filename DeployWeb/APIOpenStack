@@ -1,0 +1,22 @@
+****************** API OpenStack *******************
+	--image (openstack image list)
+	--flavor (openstack flavor list)
+	--key-name (openstack keypair list)
+	--availability-zone (openstack availability zone list)
+	--network (openstack network list)
+	--security-group (openstack security group list)
+	--user-data SEU-ARQUIVO-SCRIPT-POS-BOOT.file
+
+$ openstack server create --image Rocky-8-x86_64 \
+	--flavor m1.small.cpu-shared \
+	--key-name monredes-noteic \
+	--availability-zone nova \
+	--network private_and_floating-ip \
+    	--security-group default \
+    	--security-group monredes_global_http \
+	--user-data user-data.yml \
+	vm-teste
+
+$ openstack console log show vm-teste ------> show logs from virtual machine
+
+$ openstack console log show vm-teste | grep 'Started The Apache HTTP Server' ------> check if virtual machine started
