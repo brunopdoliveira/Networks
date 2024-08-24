@@ -1,0 +1,15 @@
+************* Container base *************
+>> wget http://143.106.16.156/containers/centos_data.tgz
+>> tar -zxvf centos_data.tgz -C /
+>> # /containers/centos
+
+>> cgcreate -g cpu,memory:teste
+
+>> ip netns add teste
+>> ip link add vnet1 type veth peer name vnet2
+>> ip link set vnet2 netns teste
+>> ip netns exec teste ifconfig vnet2 192.168.2.10/24 up
+
+>> ifconfig vnet1 192.168.2.1/24 up
+
+>> cgexec -g memory,cpu:teste ip netns exec teste chroot /containers/centos/ /bin/bash
