@@ -1,0 +1,15 @@
+****** INSTALAÇÃO JDK ******
+>> ls ~/Downloads/jdk-7u80-linux-x64.tar.gz
+>> ssh inf550@143.106.73.43
+>> scp ~/Downloads/jdk-7u80-linux-x64.tar.gz inf550@143.106.73.43:.
+>> scp -i ~/.ssh/id_rsa.pub FILENAME USER@SERVER:/home/USER/FILENAME
+>> (DESCOMPACTAR JAVA) tar -zxvf jdk-7u80-linux-x64.tar.gz
+>> jdk1.7.0_80/bin/java -version
+
+
+
+****** INSTALAÇÃO SPEC ******
+>> wget www.ic.unicamp.br/~bit/spec.jar
+>> sudo jdk1.7.0_80/bin/java -jar spec.jar -i console
+>> cd /SPECjvm2008
+>> sudo /home/ubuntu/jdk1.7.0_80/bin/java -jar SPECjvm2008.jar -ikv startup.scimark.fft
