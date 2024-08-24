@@ -1,0 +1,179 @@
+###################################### COMANDOS DE REDE #############################################
+
+###### IP HOST ###### 
+---> hostname -I (IP da máquina)
+---> IP addr show
+
+
+
+##### VAZÃO E LATÊNCIA #####
+
+1) Teste de vazão da transmissão fim-a-fim:
+Servidor TCP:
+# iperf -s -i <intervalo>
+Servidor UDP:
+# iperf -s -u -i <intervalo>
+
+Cliente TCP Upstream:
+# iperf -c <ip_servidor> 
+Cliente TCP Upstream e Downstream:
+# iperf -c <ip_servidor> -r 
+
+No servidor UDP:
+# iperf -s -u -i <intervalo>
+No cliente TCP:
+# iperf -c <ip_servidor> -u
+
+Parâmetros importantes:
+-c: operação do IPERF como cliente.
+-s: operação do IPERF como servidor.
+-r: medição de desempenho nos dois sentidos (upstream e downstream).
+-t: tempo de execução do cliente em segundos.
+-u: transmissão sobre UDP.
+-i: intervalo em segundos para exposição das métricas de saída.
+-b x: fixa a taxa de transmissão em x bps. Por exemplo, “-b 20M” fixa a taxa de transmissão do cliente em 20 Mbps.
+
+
+2) Teste latência e disponibilidade do nó alvo:
+Ping
+# ping <ip_maquina_destino>
+
+Traceroute
+# traceroute <ip_maquina_destino>
+
+
+
+##### DNS ######
+
+# TESTE01
+- Abra o terminal e digite o seguinte comando: cat /etc/resolv.conf. 
+Após isso verifique quais são os DNS que estão configurados na máquina.
+
+- No mesmo terminal digite sudo sss_cache -E para limpar o cache do DNS local, 
+faça teste olhando no wireshark e pesquisndo url na web.
+
+
+# TESTE02
+- (Terminal) dig www.unicamp.br
+- (Terminal) dig www.google.com.br +trace @143.106.2.5
+
+Exemplos de consulta com a ferramenta dig (dns-utils):
+•        Consulta DNS com a ferramenta dig
+	 dig www.unicamp.br @143.106.2.5 (O '@' seta o servidor de consulta DNS, para saber servidores disponíveis veja pelo 'cat')
+ 
+•        Consulta DNS por tipo (Query Type)
+	 dig rnp.br ns @143.106.2.5
+
+•        Consulta DNS diretamente para um servidor DNS específico (IP/Fullname).
+	 dig www.rnp.br @8.8.8.8
+	 dig www.google.com.br @ns<NS-SERVERS-RNP>
+
+•      Consulta DNS Interativa a partir (Root Servers).
+	 dig www.google.com.br +trace @143.106.2.5 ('+trace' faz a consulta DNS de forma iterativa (root, tld e autoritativo))
+Outra ferramenta útil para essa prática, mas não tão sofisticada quanto dig é nslookup.
+
+
+
+##### TELNET HTTP #####
+- Faz testes em portas de comunicação.
+- telnet SERVERNAME 80(http)
+- Portas
+21 - FRP
+22 - SSH
+143 - IMAP
+587 - SMTP
+3306 - MySQL
+443 - HTTPS
+
+- Aparecendo uma mensagem de 'Connected' pode se fazer a requisição web.
+
+- telnet 167.114.207.53 8092
+GET / HTTP/1.1
+[Enter][Enter]
+
+- Direto no chrome: http://167.114.207.53:8082
+
+- telnet www.google.com 90
+GET / HTTP/1.1
+[Enter][Enter]
+
+- Teste se uma determinada máquina está com a porta aberta
+---> telnet 192.168.2.102 445 
+
+---> nc -v 192.168.2.102 445 (testa conexão com porta)
+
+
+
+
+###### TCP/UDP ######
+
+- Envio de pacotes UDP
+---> iperf -u -c 143.106.16.163 -p 50000 -b 250m -t 10
+
+-u -> Utiliza o UDP como protocolo de transporte
+-c -> Execução em modo cliente, sendo necessário informar o IP do servidor
+-p -> Altera a porta padrão de execução, ex.: iperf -s -p 2222
+-b -> Define a banda a ser utilizada em bps (apenas para UDP)
+-t -> tempo em segundos da transmissão por padrão o tempo é 10s - intervalo de tempo entre as mensagens
+
+
+
+
+- Envio de pacotes TCP
+---> iperf -c 143.106.16.163 -p 50000 -t 10 -P 10
+
+-c -> Execução em modo cliente, sendo necessário informar o IP do servidor
+-p -> Altera a porta padrão de execução, ex.: iperf -s -p 2222
+-t -> tempo em segundos da transmissão por padrão o tempo é 10s - intervalo de tempo entre as mensagens
+-P -> Somente em modo cliente, gera tráfego simulando vários clientes em paralelo
+
+
+
+
+###### COMUNICAÇÃO DE PROCESSOS ######
+
+- Terminal 1: nc -l 9000 (nc trasmite coisas pela rede, padrão é binário. Este comando inicia porta em modo "listen")
+- Terminal 3: netstat -lntp (checar portas em modo listen)
+- Terminal 2: nc -v 127.0.0.1 9000 (IP da máquina local - Irá estavelecer uma conexão na porta 9000)
+- Terminal 3: netstat -ntp (checar portas em modo estabelecidos)
+
+- Tabela de convenção de portas usadas no linux
+>> less /etc/services
+
+**
+É possível restringir as interfaces de aberturas de portas.
+> nc -l 0.0.0.0 9000 (Em qualquer inteface que bater na porta 9000 se comunicará)
+> nc -l 192.168.0.200 9000 (Somente através da interface 192 e porta 9000)
+
+
+
+
+##### ROTAS EM ROTEADORES ######
+
+Comandos no shell:
+- route – para verificar as rotas
+- ip route add x.x.x.x/y via z.z.z.z – comando para adicionar uma rota manualmente.
+- ip route del x.x.x.x/y via z.z.z.z – comando para deletar uma rota manualmente.
+- tcpdump -i eth2 - veja pacotes que estão passando nesta interface do roteador.
+
+
+
+
+###### VERIFICANDO PORTAS E FIREWALL #####
+- Verificar se possui aplicação rodando através de uma porta e se tem firewall
+>> tcptraceroute -n 143.106.16.156 8456 
+
+- Firewall permite ou não a passagem de um pacote, não passa na camada de aplicação.
+
+- Com firewall configurado, ele NÃO RESPONDE. Pois não responde e quem responde é a camada de aplicação.
+
+** PARA VER TODAS AS FUNÇÕES DE 'tcptraceroute'
+>> man tcptraceroute
+>> tcptraceroute -m 15 -n 143.106.16.156 70
+
+
+
+
+###### APIs ######
+** TESTE COM CURL **
+>> curl http://ssh.students.ic.unicamp.br:50000/get/version
