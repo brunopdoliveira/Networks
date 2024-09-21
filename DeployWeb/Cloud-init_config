@@ -1,0 +1,13 @@
+#cloud-config
+ssh_pwauth: True
+password: cloudsenha
+package_upgrade: true
+packages:
+- apache2
+
+
+runcmd:
+- git clone https://github.com/brunopdoliveira/Network.git /var/www/html/
+- apt-get install apache2 -y
+- systemctl enable apache2
+- systemctl start apache2
