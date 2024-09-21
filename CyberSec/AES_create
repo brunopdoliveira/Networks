@@ -1,0 +1,23 @@
+********** CHAVE SIMÉTRICA AES ************
+
+1. Criar uma mensagem teste:
+Vamos criar uma mensagem simples para teste. Por exemplo, "Mensagem secreta para teste".
+
+>>echo "Mensagem secreta para teste" > mensagem.txt
+
+2. Gerar uma chave simétrica:
+Vamos gerar uma chave simétrica para cifrar e decifrar a mensagem. Vou gerar uma chave AES de 128 bits como exemplo:
+
+>> openssl rand -hex 16 > chave.txt
+
+3. Cifrar a mensagem usando a chave simétrica:
+
+>>openssl enc -aes-128-cbc -in mensagem.txt -out mensagem_cifrada.enc -pass file:chaveAES.txt -pbkdf2
+
+4. Decifrar a mensagem usando a mesma chave simétrica:
+
+>>openssl enc -d -aes-128-cbc -in mensagem_cifrada.enc -out mensagem_decifrada.txt -pass file:chaveAES.txt -pbkdf2
+
+5. Verifique igualdade
+
+>> diff mensagem.txt mensagem_decifrada.txt
