@@ -1,0 +1,37 @@
+A)	Criação de instância com serviço web.
+
+	- Crie uma instância com o SO de sua preferência, que contenha sua chave de SSH.
+	- Como criar a sua chave:
+	- https://docs.digitalocean.com/products/droplets/how-to/add-ssh-keys/create-with-openssh/
+	- Faça o procedimento da criação da chave a partir do servidor de SSH no IC ssh.students.ic.unicamp.br
+	- Utilize a rede local-ic_and_ipv6-c11d.
+	- Incluir no security group a liberação do acesso aos serviços de SSH (22) + HTTP (80), com permissão para que todas as redes tenham acesso.
+
+B)	Instalar na instância o serviço web apache.
+
+	CentOS
+        - yum -y install httpd
+        - systemctl start httpd
+        - # DocumentRoot /var/www/html
+	Ubuntu
+	- sudo apt update & upgrade
+
+	Apache
+	- sudo apt install apache2
+        - sudo systemctl start apache2
+
+C) Opção 1 : Acesse via browser o seu servidor na cloud utilizando um túnel de SSH, pois o IP de seu projeto é um IP privado que é roteável apenas na rede do IC.
+	- Tutorial de como criar um tunel via SSH: https://suporte.ic.unicamp.br/outros/tunel-ssh/
+	
+   Opção 2 : Abra o serviço a partir do servidor de ssh.students.ic.unicamp.br
+        - elinks http://IP-SERVIDOR-WEB
+        - curl http://IP-SERVIDOR-WEB
+        - wget http://IP-SERVIDOR-WEB
+
+        - curl http://127.0.0.1
+
+D) Tunel SSH: ssh -D 12345 redes24a18@ssh.students.ic.unicamp.br
+
+E) Verifica porta: netstat -l | grep 12345
+
+F) Configura Proxy no navegador: SOCKS Host - 127.0.0.1 / Port - 12345
